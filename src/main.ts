@@ -1,8 +1,15 @@
-import Vue from "vue";
-import App from "./App.vue";
+import Vue from "vue"
 
-Vue.config.productionTip = false;
+import Element from "element-ui"
+
+import App from "./App.vue"
+
+Vue.config.productionTip = false
+
+Vue.use(Element, {
+  size: 'medium'
+})
 
 new Vue({
   render: h => h(App)
-}).$mount("#app");
+}).$mount("#app")
