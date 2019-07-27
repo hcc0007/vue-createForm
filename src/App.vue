@@ -1,22 +1,18 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <route-view />
+  </div>
 </template>
 
 <script>
-import { Vue, Component } from 'vue-property-decorator'
-import CreateForms from './components/CreateForms'
+import { Vue } from 'vue-property-decorator'
 
-@Component({
-  components: {
-    CreateForms
-  }
-})
 export default class App extends Vue {
   name = 'App'
-  data() {
-    return {
-      formItems: []
-    }
+
+  // 周期
+  mounted() {
+    this.$router.push('/')
   }
 }
 </script>

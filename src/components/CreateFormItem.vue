@@ -1,22 +1,65 @@
 <template>
   <el-form-item
     v-if="
-      element &&
-        element[key] &&
+      element.key &&
         middleWareJudgeType('isShow', element.option)
     "
-    :prop="element.key"
+    :prop="element.prop || element.key"
+    :label="element.label"
+    :class="element.option.itemClassName"
+    :style="element.option.itemStyle"
   >
-    <!-- input text -->
-    <template v-if="element.type === 'text'">
+    <!-- input -->
+    <template
+      v-if="
+        ['text', 'textarea', 'password'].indexOf(
+          element.type
+        ) > -1
+      "
+    >
       <el-input
-        :disabled="element.option.disabled"
         v-model="element.option.defaultValue"
-        type="text"
-      />
+        :type="element.type"
+        :placeholder="element.option.placeholder"
+        :disabled="element.option.disabled"
+        :clearable="element.option.clearable"
+        :maxlength="element.option.maxlength"
+        :minlength="element.option.minlength"
+        :show-word-limit="element.option.showWordLimit"
+        :size="element.option.size"
+        :prefix-icon="element.option.prefixIcon"
+        :suffix-icon="element.option.suffixIcon"
+        :rows="element.option.rows"
+        :autosize="element.option.autosize"
+        :autocomplete="element.option.autocomplete"
+        :resize="element.option.resize"
+        :class="element.option.elClassName"
+        :style="element.option.elStyle"
+        @input="handleChange"
+      >
+      </el-input>
     </template>
-    <!-- input textarea -->
-    <template v-if="element.type === 'textarea'">
+
+    <!-- select -->
+    <template v-if="element.type === 'select'">
+      <el-select
+        v-model="element.option.defaultValue"
+        :placeholder="element.option.placeholder"
+        :disabled="element.option.disabled"
+        :clearable="element.option.clearable"
+        :multiple="element.option.multiple"
+        :filterable="element.option.filterable"
+        @change="handleChange"
+      >
+        <el-option
+          v-for="item in option.options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+          :disabled="item.disabled"
+        >
+        </el-option>
+      </el-select>
     </template>
   </el-form-item>
 </template>
@@ -25,19 +68,57 @@
 export default {
   name: 'CreateFormItem',
   props: {
-    key: {
-      required: true,
-      type: String
-    },
-    element: {
+    elementInfo: {
       required: true,
       type: Object
     }
   },
   data() {
-    return {}
+    const elementConfig = Object.keys(
+      this.elementInfo
+    ).reduce((result, key) => {
+      if (['type', 'key', 'prop'].indexOf(result) > -1) {
+        result[key] = this.elementInfo[key]
+        return result
+      }
+    }, {})
+    const elementOption = Object.assign(
+      elementInfo.option,
+      {}
+    )
+    return {
+      /**
+       * @param element {Object}
+       */
+      element: {
+        type: '',
+        key: '',
+        prop: '',
+        ...elementConfig,
+        option: {
+          defaultValue: '',
+          placeholder: '',
+          disabled: false,
+          clearable: false,
+          isShow: true,
+          ////////
+          multiple: false,
+          filterable: false,
+          options: [],
+          ...elementOption
+        }
+      }
+    }
   },
   method: {
+    /**
+     * judge the element[key] type and return the result.
+     * @method middleWareJudgeType
+     * @param key {String}
+     * @param element {Object}
+     * @param args {Array}
+     * @returns {String|Array|Boolean}
+     */
     middleWareJudgeType(key, element, ...args) {
       if (!key || !element || element[key]) {
         // eslint-disable-next-line no-console
@@ -57,6 +138,15 @@ export default {
         default:
           return element[key]
       }
+    },
+    /**
+     * upload value.
+     * @method handleChange
+     * @param val {String|Number}
+     * @returns
+     */
+    handleChange(val) {
+      this.$emit('handleChange', val, this.element)
     }
   }
 }
