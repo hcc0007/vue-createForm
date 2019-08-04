@@ -52,7 +52,7 @@
         @change="handleChange"
       >
         <el-option
-          v-for="item in option.options"
+          v-for="item in element.option.options"
           :key="item.value"
           :label="item.label"
           :value="item.value"
@@ -71,9 +71,17 @@ export default {
     elementInfo: {
       type: Object,
       default: () => ({})
-    }
+    },
+    bindingForm: {
+      type: Object,
+      default: () => ({})
+    },
+    handleInstance: Function
   },
   data() {
+    const modelForm = JSON.parse(
+      JSON.stringify(this.bindingForm)
+    )
     const elementConfig = Object.keys(
       this.elementInfo
     ).reduce((result, key) => {
@@ -83,11 +91,13 @@ export default {
       ) {
         result[key] = this.elementInfo[key]
       }
+
       return result
     }, {})
     const elementOption = {
       ...(this.elementInfo.option || {})
     }
+
     return {
       /**
        * @param element {Object}
@@ -110,7 +120,8 @@ export default {
           options: [],
           ...elementOption
         }
-      }
+      },
+      modelForm
     }
   },
   methods: {
@@ -154,7 +165,7 @@ export default {
      * @returns
      */
     handleChange(val) {
-      this.$emit('handleChange', val, this.element)
+      this.handleInstance(val, this.element)
     }
   }
 }
