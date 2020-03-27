@@ -17,16 +17,20 @@ export default new Router({
           name: 'dashboard',
           component: () => import('@/views/DashBoard/index.vue')
         },
+        
         {
           path: 'form',
           name: 'form',
           component: () => import('@/views/GenerateForm/index.vue')
-        },
-        {
-          path: 'table',
-          name: 'table',
-          component: () => import('@/views/FixedTable/index.vue')
         }
+      ]
+    },
+    {
+      path: 'generate',
+      name: 'generate',
+      component: layout,
+      redirect: 'form',
+      children: [
       ]
     }
   ]

@@ -21,11 +21,6 @@ export default new Router({
           path: 'form',
           name: 'form',
           component: () => import('@/views/GenerateForm/index.vue')
-        },
-        {
-          path: 'table',
-          name: 'table',
-          component: () => import('@/views/FixedTable/index.vue')
         }
       ]
     }

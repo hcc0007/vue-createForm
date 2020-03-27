@@ -1,0 +1,55 @@
+<template>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <td
+            v-for="column in columnList"
+            :key="column.prop"
+          >
+            {{ column.label }}
+          </td>
+        </tr>
+      </thead>
+    </table>
+
+    <table>
+      <tbody>
+        <tr
+          v-for="row in rows"
+          :key=""
+        >
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script lang="ts">
+import {
+  Vue,
+  Prop,
+  Component
+} from 'vue-property-decorator';
+const _ = require('lodash')
+
+interface Column {
+  prop: string;
+  label: string;
+}
+
+@Component({})
+export default class FixedTable extends Vue {
+  @Prop({ required: true, type: Array, default: () => [] })
+  tableData: object[] = [];
+
+  @Prop({ required: true, type: Array })
+  columns: Column[] = [];
+
+  columnList: Column[] = [...this.columns];
+  rowList: object[] = [this.tableData];
+}
+</script>
+
+<style lang="scss" scoped></style>
